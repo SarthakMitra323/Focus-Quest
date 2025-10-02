@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus Quest - Turn Tasks Into Adventures</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">⚔️ Focus Quest</h1>
+            <p class="tagline">Transform tasks into epic adventures</p>
+            <button class="settings-btn" id="settingsBtn" aria-label="Open Settings">⚙️</button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-container">
+        <div class="container">
+            <div class="layout">
+                
+                <!-- Left Sidebar: Quest Creation & Active Timer -->
+                <aside class="sidebar">
+                    <!-- New Quest Form -->
+                    <section class="card quest-form" id="questForm">
+                        <h2 class="card-title">📜 New Quest</h2>
+                        <form id="newQuestForm">
+                            <div class="form-group">
+                                <label for="taskTitle">Quest Title *</label>
+                                <input type="text" id="taskTitle" placeholder="e.g., Complete project proposal" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="taskDesc">Description (optional)</label>
+                                <textarea id="taskDesc" rows="3" placeholder="Add quest details..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Timer Duration</label>
+                                <div class="timer-presets">
+                                    <button type="button" class="preset-btn active" data-minutes="25">25 min</button>
+                                    <button type="button" class="preset-btn" data-minutes="15">15 min</button>
+                                    <button type="button" class="preset-btn" data-minutes="50">50 min</button>
+                                    <input type="number" id="customTimer" placeholder="Custom" min="1" max="180">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">⚔️ Start Quest</button>
+                        </form>
+                    </section>
+
+                    <!-- Active Quest Timer -->
+                    <section class="card active-timer hidden" id="activeTimer">
+                        <h2 class="card-title">🕰️ Quest in Progress</h2>
+                        <div class="quest-details">
+                            <h3 id="activeQuestTitle">Quest Title</h3>
+                            <p id="activeQuestDesc" class="quest-desc"></p>
+                        </div>
+                        <div class="timer-display">
+                            <div class="circular-timer">
+                                <svg class="timer-ring" width="200" height="200">
+                                    <circle class="timer-ring-bg" cx="100" cy="100" r="90"></circle>
+                                    <circle class="timer-ring-progress" cx="100" cy="100" r="90" id="timerProgress"></circle>
+                                </svg>
+                                <div class="timer-text" id="timerText">25:00</div>
+                            </div>
+                        </div>
+                        <div class="timer-controls">
+                            <button class="btn btn-secondary" id="pauseBtn">⏸️ Pause</button>
+                            <button class="btn btn-secondary hidden" id="resumeBtn">▶️ Resume</button>
+                            <button class="btn btn-danger" id="cancelBtn">❌ Cancel</button>
+                        </div>
+                        <p class="motivational-text" id="motivationalText">Focus on the task — the world waits! 🌟</p>
+                    </section>
+                </aside>
+
+                <!-- Right Content: Journey Progress & History -->
+                <div class="main-content">
+                    
+                    <!-- Journey Selection & Progress -->
+                    <section class="card journey-section">
+                        <h2 class="card-title">🗺️ Your Journey</h2>
+                        <div class="journey-selector">
+                            <button class="journey-btn active" data-journey="mountain">🏔️ Knowledge Mountain</button>
+                            <button class="journey-btn" data-journey="star">🚀 Star Voyage</button>
+                            <button class="journey-btn" data-journey="sea">🌊 Deep Sea</button>
+                        </div>
+                        
+                        <div class="journey-progress">
+                            <div class="progress-info">
+                                <span id="journeyName">Knowledge Mountain</span>
+                                <span id="journeyPercent">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                                <div class="progress-traveler" id="progressTraveler" style="left: 0%">🧗</div>
+                            </div>
+                            <p class="journey-status" id="journeyStatus">Begin your ascent to the peak of productivity!</p>
+                        </div>
+
+                        <!-- Journey Visual Map -->
+                        <div class="journey-map" id="journeyMap">
+                            <svg class="journey-svg" viewBox="0 0 600 300" id="journeySvg">
+                                <!-- Path will be drawn by JS -->
+                                <path id="journeyPath" class="journey-path" d="M 50 250 Q 150 200, 200 150 T 400 100 T 550 50" fill="none" stroke="#cbd5e1" stroke-width="8" stroke-linecap="round"/>
+                                <path id="journeyPathProgress" class="journey-path-progress" d="M 50 250 Q 150 200, 200 150 T 400 100 T 550 50" fill="none" stroke="url(#gradient)" stroke-width="8" stroke-linecap="round"/>
+                                <defs>
+                                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                <circle id="journeyMarker" class="journey-marker" cx="50" cy="250" r="12" fill="#f59e0b"/>
+                            </svg>
+                        </div>
+                    </section>
+
+                    <!-- Achievements -->
+                    <section class="card achievements-section">
+                        <h2 class="card-title">🏆 Achievements</h2>
+                        <div class="achievements-grid" id="achievementsGrid">
+                            <!-- Achievements will be populated by JS -->
+                        </div>
+                    </section>
+
+                    <!-- Quest History -->
+                    <section class="card history-section">
+                        <h2 class="card-title">📚 Quest Log</h2>
+                        <div class="history-list" id="historyList">
+                            <div class="empty-state">
+                                <p>🌟 No quests completed yet</p>
+                                <p class="empty-hint">Start your first quest and begin your journey!</p>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Settings Modal -->
+    <div class="modal hidden" id="settingsModal">
+        <div class="modal-content card">
+            <div class="modal-header">
+                <h2>⚙️ Settings</h2>
+                <button class="close-btn" id="closeSettings">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="themeToggle">Theme</label>
+                    <div class="theme-toggle">
+                        <button class="theme-btn active" data-theme="light">☀️ Light</button>
+                        <button class="theme-btn" data-theme="dark">🌙 Dark</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="defaultTimer">Default Timer (minutes)</label>
+                    <input type="number" id="defaultTimer" value="25" min="1" max="180">
+                </div>
+                <div class="form-group">
+                    <label>Data Management</label>
+                    <div class="data-buttons">
+                        <button class="btn btn-secondary" id="exportData">📤 Export Data</button>
+                        <button class="btn btn-secondary" id="importData">📥 Import Data</button>
+                        <input type="file" id="importFile" accept=".json" class="hidden">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>⚠️ Danger Zone</label>
+                    <button class="btn btn-danger" id="resetProgress">🔄 Reset All Progress</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Confetti Container -->
+    <canvas id="confetti" class="confetti-canvas"></canvas>
+
+    <script src="script.js"></script>
+</body>
+</html>
